@@ -80,18 +80,23 @@ app.post("/albums", (request, response) => {
 });
 
 app.delete("/albums/:albumId", (request, response) => {
-  console.log("DELETE /albums route");
 
   const idToDelete = request.params.albumId;
-  console.log(idToDelete, "<----- id to delete");
-  const albumIndex = albumsData.indexOf(idToDelete);
-  console.log(albumIndex, "<----- index of deleted item");
-  const removeId = albumsData.splice(albumIndex);
-  console.log(removeId, "<----- array of removed item?");
+
+  const indexOfAlbumToDelete = albumsData.findIndex(
+    (x) => x.albumId === idToDelete
+  );
+
+  if (indexOfAlbumToDelete === -1) {
+    response.status(404).json({ success: false });
+  } else {
+    albumsData.splice(indexOfAlbumToDelete);
+    response.status(200).json({ success: true });
+  }
 });
 
-app.listen(3000, () => {
-  console.log("Server is listening on port 3000. Ready to accept requests!");
+app.listen(3001, () => {
+  console.log("Server is listening on port 3001. Ready to accept requests!");
 });
 
 // Random Mad Comments:

@@ -3,6 +3,7 @@ const app = express();
 
 app.use(express.json());
 
+//LESSON 1 exercises:
 app.get("/", (request, response) => {
   response.send("Yay Node!");
 });
@@ -38,8 +39,7 @@ app.get("/multiply", (request, response) => {
   response.send(multiplyResult.toString());
 });
 
-//Lesson 2 exercises:
-
+//LESSON 2 exercises:
 const albumsData = [
   {
     albumId: "10",
@@ -63,24 +63,37 @@ const albumsData = [
   },
 ];
 
+//GET all albums
 app.get("/albums", (request, response) => {
   response.status(200).send(albumsData);
 });
 
+//GET album specified by ID
 app.get("/albums/:albumId", (request, response) => {
   const idToFind = request.params.albumId;
   const album = albumsData.find((album) => album.albumId === idToFind);
   response.status(200).send({ album });
 });
 
+//CREATE new album and POST it
 app.post("/albums", (request, response) => {
   const newAlbum = request.body;
   albumsData.push(newAlbum);
-  response.status(201).send({ newAlbum });
+  response.status(201).json(newAlbum);
 });
 
-app.delete("/albums/:albumId", (request, response) => {
+//UPDATE message with specified ID
+app.put("/albums/:albumId", (request, response) => {
+  const id = request.params.albumId; //id=string, but so is url
+  const updatedAlbum = request.body;
+  console.log(id);
 
+  const albumToUpdate = albumsData.find((album) => album.albumId === id); //access the actual album
+  console.log(albumToUpdate);
+});
+
+//DELETE album specified by ID
+app.delete("/albums/:albumId", (request, response) => {
   const idToDelete = request.params.albumId;
 
   const indexOfAlbumToDelete = albumsData.findIndex(

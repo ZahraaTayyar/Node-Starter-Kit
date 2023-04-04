@@ -85,11 +85,26 @@ app.post("/albums", (request, response) => {
 //UPDATE message with specified ID
 app.put("/albums/:albumId", (request, response) => {
   const id = request.params.albumId; //id=string, but so is url
-  const updatedAlbum = request.body;
-  console.log(id);
+  const albumToUpdate = albumsData.find((album) => album.albumId === id);
+  const indexOfAlbumToUpdate = albumsData.indexOf(albumToUpdate);
 
-  const albumToUpdate = albumsData.find((album) => album.albumId === id); //access the actual album
-  console.log(albumToUpdate);
+  let updatedAlbum = {
+    albumId: albumToUpdate.albumId,
+    artistName: request.body.artistName,
+    collectionName: request.body.collectionName,
+    artworkUrl100: request.body.artworkUrl100,
+    primaryGenreName: request.body.primaryGenreName,
+    url: request.body.url,
+  };
+
+  if (indexOfAlbumToUpdate === -1) {
+    response.status(404).json({ success: false, error: "ID does not exist" });
+  } else {
+    albumsData.splice(indexOfAlbumToUpdate, 1, updatedAlbum);
+    response
+      .status(200)
+      .json({ success: true, message: "Album has been updated", updatedAlbum });
+  }
 });
 
 //DELETE album specified by ID
